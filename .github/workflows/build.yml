@@ -1,0 +1,23 @@
+name: Build AUTO-TUNAS VST3
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --config Release --target AutoTunas_VST3
+      - name: Upload VST3
+        uses: actions/upload-artifact@v4
+        with:
+          name: AUTO-TUNAS-VST3-${{ matrix.os }}
+          path: build/AutoTunas_artefacts/Release/VST3/
